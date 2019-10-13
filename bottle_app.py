@@ -1,8 +1,8 @@
-#Autor: Ricardo Roberto de Lima - 2018 -> projeto de bottle
+#Autor: Lucas Camargo Sodre - 2018 -> projeto de bottle
 #Conjunto de importacoes
 from bottle import default_app, template, request, post, get
-from sklearn.naive_bayes import GaussianNB
 from sklearn.externals import joblib
+from sklearn.tree import DecisionTreeRegressor
 
 #Definição das possíveis rotas para a função de callback
 
@@ -10,36 +10,34 @@ from sklearn.externals import joblib
 @get('/form/')
 def index():
      #Definição de valores iniciais para as expressões animal, classificação e probabilidade
-     return template('/home/ricardorobertolima/mysite/Formulario.html', animal = "-", classificacao = "-", probabilidade = "-")
+     return template('/firstappmachinelearning/formulariolimitecredito.html', animal = "-", classificacao = "-", probabilidade = "-")
 
 #Definição da rota e função de callback
 @post('/form/')
 def index_resposta():
     #Pega os valores informados no formulário e atribui a variaveis locais
-    animal = request.forms.get('animal')
-    sangue = request.forms.get('sangue')
-    bota_ovo = request.forms.get('bota_ovo')
-    voa = request.forms.get('voa')
-    mora_agua = request.forms.get('mora_agua')
+    renda_anual = request.forms.get('renda_anual')
+    historico_do_credito = request.forms.get('historico_do_credito')
+    divida = request.forms.get('divida')
+    garantia = request.forms.get('garantia')
 
-    modelo_NB = GaussianNB()
+    modelo_tree = DecisionTreeRegressor()
     #Carrega o modelo gerado
-    modelo_NB = joblib.load('/home/ricardorobertolima/mysite/modelo_mamifero_MNB.pkl')
+    modelo_tree = joblib.load('/firstappmachinelearning/risco_de_credito_lucas_sodre_pos1.pkl')
     #Executa a classificação
-    res = modelo_NB.predict([[int(sangue), int(bota_ovo), int(voa), int(mora_agua)]])
+    res = modelo_tree.predict([[int(renda_anual),int(historico_do_credito), int(divida), int(garantia)]])
 
     #Encontra o valor da confidência
-    probabilidade = modelo_NB.predict_proba([[int(sangue), int(bota_ovo), int(voa), int(mora_agua)]])
+    probabilidade = modelo_tree.predict_proba([[int(renda_anual), int(historico_do_credito), int(divida), int(garantia)]])
 
     if res == 1:
-        classificacao = "Mamífero"
-    elif res == 0:
-        classificacao = "Não Mamífero"
+        classificacao = "Baixo"
+    elif res == 2:
+        classificacao = "Moderado"
     else:
-        classificacao = "Indefinido"
+        classificacao = "Alto"
 
     #Renderiza o template com os valores passados como argumento
-    return template('/home/ricardorobertolima/mysite/Formulario.html', animal = animal, classificacao = classificacao, probabilidade = probabilidade)
-    #return template('/home/ricardorobertolima/mysite/Formulario.html', animal = animal, classificacao = classificacao)
+    return template('/firstappmachinelearning/formulariolimitecredito.html', renda_anual = renda_anual, risco_credito = classificacao, probabilidade = probabilidade)
 
 application = default_app()
