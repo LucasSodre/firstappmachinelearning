@@ -1,9 +1,8 @@
-
+# -*- coding: utf-8 -*-
 import string
 import cherrypy
 import pandas as pd
 import numpy as np
-%matplotlib inline
 
 from sklearn.model_selection  import train_test_split
 from sklearn.tree import DecisionTreeRegressor
@@ -42,7 +41,7 @@ class RiscoCredito(object):
             "risco_credito":classificacao,
             "probabilidade":probabilidade,
         }
-        return dadoss
+        return dados
 
 
 if __name__ == '__main__':
