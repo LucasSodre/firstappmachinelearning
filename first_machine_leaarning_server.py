@@ -14,18 +14,19 @@ class RiscoCredito(object):
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
-    def probabilidade_risco_de_credito(self, historico_da_consulta=1,divida=1,renda=1000,garantia=1):
+    def probabilidade_risco_de_credito(self, historico_do_credito=1,divida=1,renda_anual=1000,garantia=1):
         df1 = pd.read_csv("dados_limitecredito.csv")
         data_treino = np.array(df1[['historico_credito', 'divida', 'garantias', 'renda']])
         data_classif = np.array(df1['Risco'])
         X_treino, X_teste, Y_treino, Y_teste = train_test_split(data_treino, data_classif, test_size=0.30)
         modelo_tree = DecisionTreeRegressor()
-        arvore_classificacao = modelo_tree.fit(x_treino, y_treino)
+        arvore_classificacao = modelo_tree.fit(X_treino, Y_treino)
         #Executa a classificação
         res = modelo_tree.predict([[int(renda_anual),int(historico_do_credito), int(divida), int(garantia)]])
 
         #Encontra o valor da confidência
-        probabilidade = modelo_tree.predict_proba([[int(renda_anual), int(historico_do_credito), int(divida), int(garantia)]])
+#         probabilidade = modelo_tree.predict_proba([[int(renda_anual), int(historico_do_credito), int(divida), int(garantia)]])
+        probabilidade = 0
 
         if res == 1:
             classificacao = "Baixo"
@@ -37,7 +38,7 @@ class RiscoCredito(object):
         risco_credito = "Alto"
         probabilidade = 0
         dados = {
-            "renda":renda,
+            "renda":renda_anual,
             "risco_credito":classificacao,
             "probabilidade":probabilidade,
         }
