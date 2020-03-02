@@ -1,2 +1,2 @@
 # firstappmachinelearning
-modelo de arvore de descisão para a base de dados de risco de credito
+modelo de arvore de descisão para calcular o risco de credito
