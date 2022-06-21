@@ -2,7 +2,7 @@ cherrypy==3.6.0
 pyrebase==3.0.27
 urllib3==1.25.3
 requests==2.21.0
-numpy==1.7.0
+numpy==1.22.0
 scipy==0.11.0
 scikit-learn==0.13.1
 pandas==0.8.1
